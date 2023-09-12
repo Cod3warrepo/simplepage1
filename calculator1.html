@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+
+    <!--       google font           -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cute+Font&family=Roboto:wght@100&display=swap" rel="stylesheet">
+    <!--       google font           -->
+
+
+</head>
+<body>
+
+<div class="calc">
+<form>
+    <div>    <input type="text" name="screen1" id="history" value="history">    </div>
+    <div class="twoscreen">  <input type="text" name="screen1" id="op_screen" value="operator">
+           <input type="text" name="screen2" id="num_screen2" value="num2" maxlength="10">    </div>
+    <div>    <input type="text" name="screen1" id="num_screen1" value="num1" maxlength="10">    </div>
+    <div class="calc">
+        <button type="button" class="buttons btn-grey" id="memoryAdd">M+</button>
+        <button type="button" class="buttons btn-grey" id="memoryRecall">MRC</button>
+        <button type="button" class="buttons btn-grey" id="memoryClear">MC</button>
+        <button type="button" class="buttons btn-grey" id="operators" data-operator="%">&percnt;</button>
+    <!-- </div>
+    <div> -->
+        <button type="button" class="buttons" id="digit">7</button>
+        <button type="button" class="buttons" id="digit">8</button>
+        <button type="button" class="buttons" id="digit">9</button>
+        <button type="button" class="buttons btn-yellow" id="operators" data-operator="/">&divide;</button>
+    <!-- </div>
+    <div> -->
+        <button type="button" class="buttons" id="digit">4</button>
+        <button type="button" class="buttons" id="digit">5</button>
+        <button type="button" class="buttons" id="digit">6</button>
+        <button type="button" class="buttons btn-yellow" id="operators" data-operator="*">&times;</button>
+    <!-- </div>
+    <div> -->
+        <button type="button" class="buttons" id="digit">1</button>
+        <button type="button" class="buttons" id="digit">2</button>
+        <button type="button" class="buttons" id="digit">3</button>
+        <button type="button" class="buttons btn-yellow" id="operators" data-operator="-">&minus;</button>
+    <!-- </div>
+    <div> -->
+        <button type="button" class="buttons" id="digit">0</button>
+        <button type="button" class="buttons" id="digit">.</button>
+        <button type="button" class="buttons btn-yellow" id="equal_operator">&equals;</button>
+        <button type="button" class="buttons btn-yellow" id="operators" data-operator="+">&plus;</button>
+    <!-- </div>
+    <div> -->
+        <button type="button" id="ac">AC</button>
+        <button type="button" id="deleteDigit">Clear</button>
+    </div>
+
+</form>
+</div>
+
+<script>
+    ( () => {
+        document.getElementById("num_screen1").value = ""
+        document.getElementById("num_screen2").value = ""
+        document.getElementById("history").value = ""
+        document.getElementById("op_screen").value = ""
+    })();
+
+
+
+    let num1 = document.getElementById("num_screen1")
+    let num2 = document.getElementById("num_screen2")
+    let history = document.getElementById("history")
+    let digits = document.querySelectorAll("#digit")
+    let operators = document.querySelectorAll("#operators")
+    let equal_operator = document.getElementById("equal_operator")
+    let clear = document.getElementById("ac")
+    let deleteDigit = document.getElementById("deleteDigit")
+    let memoryAdd = document.getElementById("memoryAdd")
+
+    // console.log(digits)
+    digits.forEach(function(digi_button) {
+        // console.log(e.innerHTML)
+        digi_button.addEventListener('click', function(e){
+            if(num1.value.length < 10){
+                console.log(num1.value.length > 11)
+                console.log(digi_button.innerHTML)
+                // string = digi_button.innerHTML
+                num1.value += digi_button.innerHTML
+            }
+        })    
+    })
+    operators.forEach(function(op_button) {
+        op_button.addEventListener('click', function(e){
+            // history.value = operators
+            if(num1.value == "" && num2.value == ""){
+                op_screen.value = ""
+            }
+            else{
+                // console.log(e.target.dataset.operator)
+
+                    if(op_screen.value == "" && num2.value == "" && num1.value==""){
+                        op_screen.value = e.target.dataset.operator
+                        num2.value = num1.value
+                        history.value += num1.value + op_screen.value
+                        num1.value = ""
+                        console.log("operator is pressed")
+                    }
+                    else if(num2.value == ""){
+                        op_screen.value = e.target.dataset.operator
+                        num2.value = num1.value
+                        // history.value += num1.value + op_screen.value
+                        num1.value = ""
+                    }
+                    else{
+                        op_screen.value = e.target.dataset.operator
+                    //     num2.value = num1.value
+                        // history.value += num1.value + op_screen.value
+                    //     num1.value = ""
+                    }
+                
+            }
+        })
+    })
+    equal_operator.addEventListener('click', function(e){
+        if(num1.value == ""){
+            console.log("num 1 is clear")
+        }
+        else{
+            equal_val = num2.value + op_screen.value + num1.value            
+            // history.value += num2.value + op_screen.value + num1.value
+                     
+            history.value += ((typeof (history.value[history.value.length-1]) != 'string') ? num2.value + op_screen.value + num1.value : op_screen.value + num1.value )
+                  
+            num2.value = eval(equal_val)
+            op_screen.value = ""
+            num1.value = ""
+            console.log(equal_val)
+            
+        }
+    })
+    clear.addEventListener('click', function(e){
+        if(!null){
+            op_screen.value = ""
+            history.value = ""
+            num1.value = ""
+            num2.value = ""
+        }
+    })
+    memoryAdd.addEventListener('click', function(e){
+        if(localStorage.length === 0 && num2 != ""){
+            localStorage.setItem("key", num2.value)
+            console.log(localStorage.getItem("key"), "#######", num2.value)           
+        }        
+    })
+    memoryRecall.addEventListener('click', function(e){
+        if(localStorage.length !== 0){
+            num2.value = localStorage.getItem("key")
+        }
+    })
+    memoryClear.addEventListener('click', function(e){
+        localStorage.removeItem("key")
+    })
+    deleteDigit.addEventListener('click', function(e){
+        num1.value = num1.value.substr(0,num1.value.length-1);
+        
+    })
+
+
+
+
+// console.log(localStorage.length === 0)
+
+
+</script>
+<!-- <script src="script_a.js"></script> -->
+</body>
+</html>
